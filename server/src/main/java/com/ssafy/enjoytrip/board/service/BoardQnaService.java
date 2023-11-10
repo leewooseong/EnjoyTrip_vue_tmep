@@ -22,7 +22,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -141,11 +140,9 @@ public class BoardQnaService {
             }
         }
 
-        List<BoardQnaListArticleProjection> list = page.getContent();
-
         return BoardQnaListOfArticleResponseDto.builder()
                 .totalPage(page.getTotalPages())
-                .articleList(list)
+                .articleList(page.getContent())
                 .build();
     }
 
