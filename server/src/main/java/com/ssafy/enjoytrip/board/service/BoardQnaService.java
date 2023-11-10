@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -115,7 +116,7 @@ public class BoardQnaService {
     }
 
     public BoardQnaListOfArticleResponseDto list(BoardQnaListOfArticleRequestDto requestDto){
-        Pageable pageable = PageRequest.of(requestDto.getPageToMove(), requestDto.getShownArticleNum());
+        Pageable pageable = PageRequest.of(requestDto.getPageToMove(), requestDto.getShownArticleNum(), Sort.by("articleId"));
         Page<BoardQnaListArticleProjection> page;
         if(requestDto.getSearchWord().isEmpty()){
             page = boardQnaRepository.findAllByDeletedDateIsNull(pageable);
