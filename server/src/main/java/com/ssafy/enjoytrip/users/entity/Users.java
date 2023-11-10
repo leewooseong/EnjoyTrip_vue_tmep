@@ -12,7 +12,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 public class Users extends BaseTime {
 
-    @Id @GeneratedValue(strategy = GenerationType.TABLE)
+    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(nullable = false)
     private Long id;
 

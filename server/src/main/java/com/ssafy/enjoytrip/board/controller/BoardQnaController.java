@@ -29,7 +29,7 @@ public class BoardQnaController {
 
     @PutMapping("/article")
     public ApiResponseDto<Void> update(@RequestBody BoardQnaUpdateArticleRequestDto requestDto, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        return ResponseUtil.ok(boardQnaService.updateArticle(requestDto, request, response));
+        return ResponseUtil.ok(boardQnaService.update(requestDto, request, response));
     }
 
     @GetMapping("/article")

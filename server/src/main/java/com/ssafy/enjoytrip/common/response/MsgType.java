@@ -19,6 +19,7 @@ public enum MsgType {
     QNA_ARTICLE_SAVE_COMPLETE("Qna Article 저장 완료"),
     QNA_ARTICLE_UPDATE_COMPLETE("Qna Article 업데이트 완료"),
     QNA_ARTICLE_DELETE_COMPLETE("Qna Article 삭제 완료"),
+    QNA_ARTICLE_DOES_NOT_EXIST("Qna Article이 존재하지 않습니다."),
     NO_COOKIE_FOUND("쿠키가 존재하지 않습니다.");
 
 

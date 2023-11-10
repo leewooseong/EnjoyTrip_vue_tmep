@@ -16,7 +16,7 @@ import javax.persistence.Id;
 public class BoardQnaArticle extends BaseTime {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.TABLE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long articleId;
 
     private String userNick;

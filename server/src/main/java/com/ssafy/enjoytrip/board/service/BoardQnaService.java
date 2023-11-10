@@ -53,7 +53,7 @@ public class BoardQnaService {
     }
 
     @Transactional
-    public MsgType updateArticle(BoardQnaUpdateArticleRequestDto requestDto, HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public MsgType update(BoardQnaUpdateArticleRequestDto requestDto, HttpServletRequest request, HttpServletResponse response) throws IOException {
         Cookie userIdCookie = checkCookieUserId(request);
 
         if (userIdCookie == null){
@@ -67,6 +67,9 @@ public class BoardQnaService {
                 return MsgType.USER_NOT_MATCH;
             }else{
                 BoardQnaArticle article = boardQnaRepository.findByArticleIdAndDeletedDateIsNull(requestDto.getArticleId()).orElseGet(BoardQnaArticle::new);
+                if(article.getArticleId() == null){
+                    return MsgType.QNA_ARTICLE_DOES_NOT_EXIST;
+                }
                 article.setTitle(requestDto.getTitle());
                 article.setContent(requestDto.getContent());
                 boardQnaRepository.save(article);
@@ -82,6 +85,7 @@ public class BoardQnaService {
 
         if(userIdCookie != null){
             BoardQnaArticle article = boardQnaRepository.findByArticleIdAndDeletedDateIsNull(requestDto.getArticleId()).orElseGet(BoardQnaArticle::new);
+            if(article.getArticleId() == null) return null;
             article.setHit(article.getHit()+1);
             boardQnaRepository.save(article);
             return BoardQnaGetArticleResponseDto.builder()
@@ -108,7 +112,7 @@ public class BoardQnaService {
                     article.setDeletedDate(LocalDateTime.now());
                     boardQnaRepository.save(article);
                     return MsgType.QNA_ARTICLE_DELETE_COMPLETE;
-                }
+                }else return MsgType.QNA_ARTICLE_DOES_NOT_EXIST;
             }
         }
 
@@ -116,7 +120,7 @@ public class BoardQnaService {
     }
 
     public BoardQnaListOfArticleResponseDto list(BoardQnaListOfArticleRequestDto requestDto){
-        Pageable pageable = PageRequest.of(requestDto.getPageToMove(), requestDto.getShownArticleNum(), Sort.by("articleId"));
+        Pageable pageable = PageRequest.of(requestDto.getPageToMove()-1, requestDto.getShownArticleNum(), Sort.by(Sort.Order.desc("articleId")));
         Page<BoardQnaListArticleProjection> page;
         if(requestDto.getSearchWord().isEmpty()){
             page = boardQnaRepository.findAllByDeletedDateIsNull(pageable);
