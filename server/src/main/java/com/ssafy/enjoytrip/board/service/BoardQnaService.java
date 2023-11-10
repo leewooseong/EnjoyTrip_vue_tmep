@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -124,37 +125,28 @@ public class BoardQnaService {
         Page<BoardQnaListArticleProjection> page;
         if(requestDto.getSearchWord().isEmpty()){
             page = boardQnaRepository.findAllByDeletedDateIsNull(pageable);
-            return BoardQnaListOfArticleResponseDto.builder()
-                    .totalPage(page.getTotalPages())
-                    .articleList(page)
-                    .build();
         }else{
             if(requestDto.getSearchCategory().equals("articleNum")){
                 Long articleId = null;
                 try {
                     articleId = Long.parseLong(requestDto.getSearchWord());
                     page = boardQnaRepository.findByArticleIdAndDeletedDateIsNull(articleId, pageable);
-                    return BoardQnaListOfArticleResponseDto.builder()
-                            .totalPage(page.getTotalPages())
-                            .articleList(page)
-                            .build();
                 }catch (NumberFormatException e){
                     return null;
                 }
             } else if (requestDto.getSearchCategory().equals("title")) {
                 page = boardQnaRepository.findByTitleContainingAndDeletedDateIsNull(requestDto.getSearchWord(), pageable);
-                return BoardQnaListOfArticleResponseDto.builder()
-                        .totalPage(page.getTotalPages())
-                        .articleList(page)
-                        .build();
             } else {
                 page = boardQnaRepository.findByUserNickContainingAndDeletedDateIsNull(requestDto.getSearchWord(), pageable);
-                return BoardQnaListOfArticleResponseDto.builder()
-                        .totalPage(page.getTotalPages())
-                        .articleList(page)
-                        .build();
             }
         }
+
+        List<BoardQnaListArticleProjection> list = page.getContent();
+
+        return BoardQnaListOfArticleResponseDto.builder()
+                .totalPage(page.getTotalPages())
+                .articleList(list)
+                .build();
     }
 
     public Cookie checkCookieUserId(HttpServletRequest request){
